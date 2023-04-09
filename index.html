@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube Playlist Analyzer</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav>
+        <div>
+            <a href=""><img src="/images/logo.png" alt="logo" id="logo"></a>
+        </div>
+        
+         <div class="options">
+            <div><a href="#" class="btn">Github</a></div>
+            <div><a href="#" class="btn">More</a></div>
+         </div>
+       
+    </nav>
+
+    <div class="main">
+
+        <div class="main-wrapper">
+        <div class="url-bar">
+            <div class="url-bar-wrapper">
+            <h3>Find Length of any Youtube playlist </h3>
+            <form id="url-form">
+            <input type="text" placeholder="playlist link (youtube.com/playlist?list=ID)" autofocus  id="url"/>
+            <button type="submit" class="btn2">Analyze</button>
+            <div class="errorDiv hide"></div>
+            <div class="info">
+              No. of Videos analyzed in a playlist will be limited to 500 videos. 
+            </div>
+            <!-- Do checkout the web extension for chrome/edge/brave and the Whatsapp bot for more ease. -->
+            <hr>
+            </form>
+        </div>
+        </div>
+        <div class="loader-container">
+            <div class="loader hide"></div>
+        </div>
+      
+        <div class="content hide" ></div>
+    </div>
+        
+    </div>
+    
+    <script src="/app.js"  type="module" ></script>
+</body>
+</html>
