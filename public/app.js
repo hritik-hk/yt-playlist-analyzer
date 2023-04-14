@@ -28,7 +28,8 @@ async function getPlaylistData(e){
       body: JSON.stringify(link)
     })
 
-    final_vid_dur= await response.json();    
+    final_vid_dur= await response.json();   
+   
    }
    catch(err){
     console.log(err)
@@ -38,18 +39,25 @@ async function getPlaylistData(e){
       return;
    }
 
-   if(!final_vid_dur.ok){
+   if(!final_vid_dur.metaData.ok){
        errorDiv.innerHTML=final_vid_dur.error;
       loader.classList.add("hide");
       errorDiv.classList.remove("hide");
       return;
    }
 
-   const count=final_vid_dur.count;
-   const unavailable_vids=final_vid_dur.unavailable_vids;
+  
+
+   const count=final_vid_dur.metaData.count;
+   const unavailable_vids=final_vid_dur.metaData.unavailable_vids;
+   const thumbnailURL=final_vid_dur.metaData.thumbnails.medium.url
+   const title=final_vid_dur.metaData.title;
+   const createdBy=final_vid_dur.metaData.channelTitle;
     
 //final duration object i.e duration values at 1x 
- const final_dur_obj_1x=final_vid_dur;
+ const final_dur_obj_1x={...final_vid_dur.duration}
+
+
 formatDuration(final_dur_obj_1x);
 
 //declaring variables for 1.25x, 1.5x and 2x
@@ -74,6 +82,13 @@ formatDuration(At_2x)
 
 
 content.innerHTML=`
+<div id="metaData">
+<div><img src=${thumbnailURL} alt="Thumbnail" id="thumbnail"></div>
+<div id="title">
+    <h3><span>${title}</span> - <span>${createdBy}</span></h3>
+</div>
+</div>
+<div>
 <p>Total No. of Videos: ${count}</p>
 <p>Total No. of Available Videos: ${count-unavailable_vids}</p>
 <p>Total No. of Unvailable Videos: ${unavailable_vids}</p>
@@ -82,6 +97,7 @@ content.innerHTML=`
 <p>At 1.50x : ${formatOutput(At_15x)}</p>
 <p>At 1.75x : ${formatOutput(At_175x)}</p>
 <p>At 2.00x : ${formatOutput(At_2x)}</p>
+</div>
 `;
 
 loader.classList.add("hide");

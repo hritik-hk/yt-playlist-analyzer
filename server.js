@@ -50,7 +50,6 @@ async function getPlaylistData(req,res){
     let count=0;  //final count of total number of videos
     const final_vid_dur=[]; //will contain final Js object time durations total/page i.e maxx=10
     let unavailable_vids=0; // for storing total num of unavailable videos
-    let thumbnail_fetched=false; //this flag will be set to false when first video thumbnail is fetched
 
     //api to get video IDs of the playlist videos.
  const URL1=`https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&fields=items/contentDetails/videoId,nextPageToken&key=${apiKey}&playlistId=${playlistID}&pageToken=`;
@@ -156,12 +155,33 @@ async function getPlaylistData(req,res){
 
   }
 
+  const URL3=`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistID}&key=${apiKey}&&fields=items/snippet/title,items/snippet/thumbnails/medium/url,items/snippet/channelTitle`
+
+  //fetch Youtube playlist title, description and Thumbnail
+  let playlist_metaData;
+  try{
+    const response= await fetch(URL3)
+    if(!response.ok){
+      throw new Error(response.status);
+    }
+
+    playlist_metaData=await response.json();    
+  }catch(err){
+      console.log(err);
+    const data={ok:false, error: `Some error occurred... Pls Try again!` }
+    res.send(JSON.stringify(data))
+      return;
+  }
+
+
   const finalReponse=getTotalDuration(final_vid_dur);
-  finalReponse.ok=true;
-  finalReponse.count=count;
-  finalReponse.unavailable_vids=unavailable_vids;
-  console.log(finalReponse);
-  res.send(JSON.stringify(finalReponse));
+
+  //adding some props to playlist_metadata object
+  playlist_metaData.items[0].snippet.ok=true;
+  playlist_metaData.items[0].snippet.count=count;
+  playlist_metaData.items[0].snippet.unavailable_vids=unavailable_vids;
+
+  res.send(JSON.stringify({duration:finalReponse,metaData:playlist_metaData.items[0].snippet}));
 
 }
 
