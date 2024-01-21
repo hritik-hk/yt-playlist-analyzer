@@ -2,6 +2,7 @@ const express=require('express')
 const path=require('path')
 require('dotenv').config()
 const {getTimeComponents,getTotalDuration} = require('./handle_ISO8601_format.js')
+const cors = require("cors");
 
 const PORT= process.env.PORT || 5000
 const apiKey=process.env.youtube_data_api_key
@@ -9,7 +10,7 @@ const apiKey=process.env.youtube_data_api_key
 const app=express()
 
 
-
+app.use(cors());
 app.use(express.json());
 
 //to serve static files like css and js script
