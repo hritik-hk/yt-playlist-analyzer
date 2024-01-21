@@ -1,0 +1,16 @@
+{
+  "name": "YT playlist analyzer",
+  "version": "0.1.0",
+  "description": "Get youtube playlist details",
+  "permissions": ["tabs"],
+  "action": {
+    "default_icon": {
+      "16": "/assets/icon.png",
+      "24": "/assets/icon.png",
+      "32": "/assets/icon.png"
+    },
+    "default_title": "YT playlist analyzer",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3
+}
