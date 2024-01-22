@@ -20,7 +20,7 @@ async function getPlaylistData(e){
     let final_vid_dur=""; // to store final duration obj at 1x speed
 
    try{
-    const response=await fetch('/get-length',{
+    const response=await fetch('/api/playlist/info',{
       method: "POST",
       headers: {
         'COntent-Type':'application/json'

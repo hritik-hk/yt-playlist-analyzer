@@ -1,5 +1,5 @@
  // function to extracting duration in number format
-function getTimeComponents(duration) {
+ exports.getTimeComponents= (duration) =>{
     const timeRegex = /^P(\d+Y)?(\d+M)?(\d+W)?(\d+D)?T?(\d+H)?(\d+M)?(\d+S)?$/;
 
     const match = timeRegex.exec(duration);
@@ -25,8 +25,7 @@ function getTimeComponents(duration) {
 duration =>an containing objects, each representing a duration in 
 years, months, weeks, days, hours, minutes, and seconds properties. 
 */
-
-  const getTotalDuration = (durations) => {
+exports.getTotalDuration = (durations) => {
   
  return durations.reduce((acc, curr) => {
     return {
@@ -44,7 +43,7 @@ years, months, weeks, days, hours, minutes, and seconds properties.
 }
 
 //for formating final duration object
-const formatDuration=(result)=>{
+exports.formatDuration=(result)=>{
   if (result.seconds >= 60) {
       result.minutes += Math.floor(result.seconds / 60);
       result.seconds %= 60;
@@ -64,24 +63,22 @@ const formatDuration=(result)=>{
 
 }
 
-
+exports.getPlaylistID= (link) =>{
+    // Extract the playlist ID from the link
+    let playlistId = "";
+    if (link.includes("list=")) {
+      const arr = link.split("list=");
+      playlistId = arr[1];
+      const ampersandIndex = playlistId.indexOf("&");
   
-
-
-  module.exports={getTimeComponents, getTotalDuration, formatDuration}
-
-
-  /*
-
-  test-cases
-
-"P4DT4H1S"
-"P7DT7S"
-"P1DT1S"
-"P1DT1H1S"
-"PT3H7M30S"
-P1Y4M3W2DT10H31M3S
-
-*/
-
-
+      if (ampersandIndex !== -1) {
+        playlistId = playlistId.substring(0, ampersandIndex);
+      }
+    } else {
+      // The link doesn't contain a playlist ID
+      console.error("Invalid playlist link:", link);
+      //also display it to the user that it doesn't contain "list=" parameter or it's invalid playlist link
+    }
+  
+    return playlistId;
+  }
