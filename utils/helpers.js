@@ -1,7 +1,5 @@
- 
-
-// function to extracting duration in number format
-  function getTimeComponents(duration) {
+ // function to extracting duration in number format
+function getTimeComponents(duration) {
     const timeRegex = /^P(\d+Y)?(\d+M)?(\d+W)?(\d+D)?T?(\d+H)?(\d+M)?(\d+S)?$/;
 
     const match = timeRegex.exec(duration);
