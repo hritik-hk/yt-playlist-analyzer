@@ -9,109 +9,89 @@ const getCurrentTabUrl = async () => {
 async function getPlaylistData() {
   const link = await getCurrentTabUrl();
   console.log(link);
-  await fetch("https://youtube-playlist-analyzer.vercel.app/get-length", {
-    method: "POST",
-    body: JSON.stringify({ url: link }),
-    headers: { "content-type": "application/json" },
-  })
+  await fetch(
+    "https://youtube-playlist-analyzer.vercel.app/api/playlist/info",
+    {
+      method: "POST",
+      body: JSON.stringify({ url: link }),
+      headers: { "content-type": "application/json" },
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
+      if (!data.ok) {
+        content.innerHTML = data.error;
+        loader.classList.add("hide");
+      } else {
         updateUI(data);
+      }
+    })
+    .catch((err) => {
+      content.innerHTML = `Some error occurred... Pls Try again!`;
+      loader.classList.add("hide");
     });
 }
 
 getPlaylistData();
 
-const updateUI = (final_vid_dur) => {
-  const count = final_vid_dur.metaData.count;
-  const unavailable_vids = final_vid_dur.metaData.unavailable_vids;
-  const title = final_vid_dur.metaData.title;
-  const createdBy = final_vid_dur.metaData.channelTitle;
+const updateUI = (playlist_data) => {
+  const count = playlist_data.metaData.count;
+  const unavailable_vids = playlist_data.metaData.unavailable_vids;
+  const title = playlist_data.metaData.title;
+  const createdBy = playlist_data.metaData.channelTitle;
 
-  //final duration object i.e duration values at 1x
-  const final_dur_obj_1x = { ...final_vid_dur.duration };
-
-  formatDuration(final_dur_obj_1x);
-
-  //declaring variables for 1.25x, 1.5x and 2x
-  const At_125x = { ...final_dur_obj_1x };
-  const At_15x = { ...final_dur_obj_1x };
-  const At_175x = { ...final_dur_obj_1x };
-  const At_2x = { ...final_dur_obj_1x };
-
-  divideDurationByX(At_125x, 1.25);
-  divideDurationByX(At_15x, 1.5);
-  divideDurationByX(At_175x, 1.75);
-  divideDurationByX(At_2x, 2);
-
-  formatDuration(At_125x);
-  formatDuration(At_15x);
-  formatDuration(At_175x);
-  formatDuration(At_2x);
-
+  //total playlist length in seconds
+  const playlist_length = playlist_data.duration;
 
   loader.classList.add("hide");
 
-
   content.innerHTML = `
- <div id="metaData">
- <div id="title">
-     <h3><span>${title}</span> - <span>${createdBy}</span></h3>
- </div>
- </div>
- <div>
- <p>Total No. of Videos: ${count}</p>
- <p>Total No. of Available Videos: ${count - unavailable_vids}</p>
- <p>Total No. of Unvailable Videos: ${unavailable_vids}</p>
- <p>Total length of playlist : ${formatOutput(final_dur_obj_1x)}</p>
- <p>At 1.25x : ${formatOutput(At_125x)}</p>
- <p>At 1.50x : ${formatOutput(At_15x)}</p>
- <p>At 1.75x : ${formatOutput(At_175x)}</p>
- <p>At 2.00x : ${formatOutput(At_2x)}</p>
- </div>
- `;
+  <div id="metaData">
+  <div id="title">
+      <h3><span>${title}</span> - <span>${createdBy}</span></h3>
+  </div>
+  </div>
+  <div>
+  <p><b>Total No. of Videos:</b> ${count}</p>
+  <p><b>Total No. of Available Videos:</b> ${count - unavailable_vids}</p>
+  <p><b>Total No. of Unvailable Videos:</b> ${unavailable_vids}</p>
+  <p><b>Total length of playlist :</b> ${formatOutput(
+    formatDuration(playlist_length, 1)
+  )}</p>
+  <p><b>At 1.25x :</b> ${formatOutput(
+    formatDuration(playlist_length, 1.25)
+  )}</p>
+  <p><b>At 1.50x :</b> ${formatOutput(formatDuration(playlist_length, 1.5))}</p>
+  <p><b>At 1.75x :</b> ${formatOutput(
+    formatDuration(playlist_length, 1.75)
+  )}</p>
+  <p><b>At 2.00x :</b> ${formatOutput(formatDuration(playlist_length, 2))}</p>
+  </div>
+  <div>Made with ❤️ by <a href="https://github.com/hritik-hk" target="_blank">HRITIK</a></div>
+  `;
 };
 
-function divideDurationByX(duration, x) {
-  //looping through all props and dividing by x
-  for (const prop in duration) {
-    duration[prop] = duration[prop] / x;
+const formatDuration = (duration, speed) => {
+  duration = Math.ceil(duration / speed);
+  let days, hours, minutes, seconds, remainder;
+  days = Math.floor(duration / (60 * 60 * 24));
+  remainder = duration % (60 * 60 * 24);
+
+  if (remainder) {
+    hours = Math.floor(remainder / (60 * 60));
+    remainder = remainder % (60 * 60);
   }
 
-  if (duration.days != 0) {
-    duration.hours += (duration.days - Math.floor(duration.days)) * 24;
-    duration.days = Math.floor(duration.days);
-  }
-  if (duration.hours != 0) {
-    duration.minutes += (duration.hours - Math.floor(duration.hours)) * 60;
-    duration.hours = Math.floor(duration.hours);
-  }
-  if (duration.minutes != 0) {
-    duration.seconds += (duration.minutes - Math.floor(duration.minutes)) * 60;
-    duration.minutes = Math.floor(duration.minutes);
+  if (remainder) {
+    minutes = Math.floor(remainder / 60);
+    remainder = remainder % 60;
   }
 
-  duration.seconds = Math.round(duration.seconds);
-}
-
-//for formating final duration object
-const formatDuration = (result) => {
-  if (result.seconds >= 60) {
-    result.minutes += Math.floor(result.seconds / 60);
-    result.seconds %= 60;
-  }
-  if (result.minutes >= 60) {
-    result.hours += Math.floor(result.minutes / 60);
-    result.minutes %= 60;
-  }
-  if (result.hours >= 24) {
-    result.days += Math.floor(result.hours / 24);
-    result.hours %= 24;
+  if (remainder) {
+    seconds = remainder;
   }
 
-  if (result.weeks !== 0 || result.months !== 0 || result.years !== 0) {
-    result.days += result.weeks * 7 + result.months * 30 + result.years * 365;
-  }
+  return { days: days, hours: hours, minutes: minutes, seconds: seconds };
 };
 
 function formatOutput(duration) {
