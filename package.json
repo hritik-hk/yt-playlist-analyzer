@@ -15,7 +15,8 @@
     "@types/node": "^18.15.11",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "iso8601-duration": "^2.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
