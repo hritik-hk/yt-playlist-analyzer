@@ -36,7 +36,7 @@ async function getPlaylistData(e) {
     return;
   }
 
-  if (!playlist_data.metaData.ok) {
+  if (!playlist_data.ok) {
     errorDiv.innerHTML = playlist_data.error;
     loader.classList.add("hide");
     errorDiv.classList.remove("hide");

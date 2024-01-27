@@ -61,11 +61,10 @@ exports.getPlaylistData = async (req, res) => {
         return;
         
       } else {
-        //    errorDiv.innerHTML=`Some error occurred... Pls Try again!`
         data = { ok: false, error: `Some error occurred... Pls Try again!` };
       }
 
-      res.status(404).json(data);
+      res.status(500).json(data);
         return;
     }
 
@@ -139,11 +138,11 @@ exports.getPlaylistData = async (req, res) => {
   }
 
   //adding some props to playlist_metadata object
-  playlist_metaData.items[0].snippet.ok = true;
   playlist_metaData.items[0].snippet.count = count;
   playlist_metaData.items[0].snippet.unavailable_vids = unavailable_vids;
 
   const data = {
+    ok : true,
     duration: playlist_length,
     metaData: playlist_metaData.items[0].snippet,
   };
