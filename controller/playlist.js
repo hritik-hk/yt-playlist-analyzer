@@ -20,7 +20,7 @@ exports.getPlaylistData = async (req, res) => {
 
   let nextPageToken = ""; // to fetch next page of the playlist items api call response
 
-  const limit = 200; // as i have 10,000 units/ day, i am limiting playlist len cal to first 200-249 vids
+  const limit = 200; // as i have 10,000 units/ day, i am limiting playlist len cal to first 200 vids
   let count = 0; //count of total number of videos
   let playlist_length = 0; //will contain total duration of playlist in seconds
   let unavailable_vids = 0; // count of total num of unavailable videos

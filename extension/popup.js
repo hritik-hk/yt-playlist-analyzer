@@ -45,7 +45,7 @@ const updateUI = (playlist_data) => {
 
   //limit exceeded
   const limitedTo = playlist_data.limited;
-  const limit = limitedTo !== 0 ? limitedTo : "";
+  const limit = limitedTo !== 0 ? `No. of videos limited to first: ${limitedTo} videos` : "";
 
   loader.classList.add("hide");
 
