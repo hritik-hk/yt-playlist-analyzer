@@ -20,7 +20,7 @@ exports.getPlaylistData = async (req, res) => {
 
   let nextPageToken = ""; // to fetch next page of the playlist items api call response
 
-  const limit = 300; // as i have 10,000 units/ day,we'll limit playlist to 300 vids
+  const limit = 200; // as i have 10,000 units/ day, i am limiting playlist len cal to first 200-249 vids
   let count = 0; //count of total number of videos
   let playlist_length = 0; //will contain total duration of playlist in seconds
   let unavailable_vids = 0; // count of total num of unavailable videos
@@ -59,13 +59,12 @@ exports.getPlaylistData = async (req, res) => {
 
         res.status(404).json(data);
         return;
-        
       } else {
         data = { ok: false, error: `Some error occurred... Pls Try again!` };
       }
 
       res.status(500).json(data);
-        return;
+      return;
     }
 
     count += video_list1.length; //adding no. of videos ID fetched to count
@@ -142,9 +141,10 @@ exports.getPlaylistData = async (req, res) => {
   playlist_metaData.items[0].snippet.unavailable_vids = unavailable_vids;
 
   const data = {
-    ok : true,
+    ok: true,
     duration: playlist_length,
     metaData: playlist_metaData.items[0].snippet,
+    limited: count >= limit ? count : 0,
   };
 
   res.status(200).json(data);

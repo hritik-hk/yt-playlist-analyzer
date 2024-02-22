@@ -43,6 +43,10 @@ const updateUI = (playlist_data) => {
   //total playlist length in seconds
   const playlist_length = playlist_data.duration;
 
+  //limit exceeded
+  const limitedTo = playlist_data.limited;
+  const limit = limitedTo !== 0 ? limitedTo : "";
+
   loader.classList.add("hide");
 
   content.innerHTML = `
@@ -52,6 +56,7 @@ const updateUI = (playlist_data) => {
   </div>
   </div>
   <div>
+  <p style="color:red;">${limit}</p>
   <p><b>Total No. of Videos:</b> ${count}</p>
   <p><b>Total No. of Available Videos:</b> ${count - unavailable_vids}</p>
   <p><b>Total No. of Unvailable Videos:</b> ${unavailable_vids}</p>
